@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ncRNA Online Predictor</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    textarea { width: 100%; height: 220px; font-family: monospace; }
+    pre { background: #f6f6f6; padding: 12px; overflow-x: auto; }
+    .row { margin-top: 14px; }
+    .btn { padding: 8px 14px; font-size: 14px; }
+    .msg { color: #b00020; }
+  </style>
+</head>
+<body>
+  <h2>ACGT sequence coding / noncoding + ncRNA subtype predictor</h2>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="msg">
+        {% for m in messages %}<div>{{m}}</div>{% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% if examples and examples|length > 0 %}
+    <div class="row">
+      <b>Examples:</b>
+      {% for ex in examples %}
+        <a style="margin-right:10px" href="/example/{{ ex }}">{{ ex }}</a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <form method="post" action="/predict">
+    <div class="row">
+      <label>Input CSV (GeneName,Label,Length,Sequence):</label>
+      <textarea name="csv_text">{{ default_text }}</textarea>
+    </div>
+    <div class="row">
+      <button class="btn" type="submit">Predict</button>
+    </div>
+  </form>
+
+  {% if pred_link %}
+    <div class="row">
+      <b>Download predictions.csv:</b> <a href="{{ pred_link }}">{{ pred_link }}</a>
+    </div>
+  {% endif %}
+
+  {% if summary %}
+    <div class="row">
+      <h3>Summary</h3>
+      <pre>{{ summary }}</pre>
+    </div>
+  {% endif %}
+</body>
+</html>
